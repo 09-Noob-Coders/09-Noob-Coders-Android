@@ -88,7 +88,7 @@ class RegisterActivity : ComponentActivity() {
                                     .width(100.dp)
                                     .height(100.dp),
                             )
-                            Text(text = "DoCode", fontSize = 35.sp)
+                            Text(text = "NoobCoders", fontSize = 35.sp)
                         }
                     }
 
