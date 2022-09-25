@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "508198863712",
+    "project_id": "noobcodersandroid",
+    "storage_bucket": "noobcodersandroid.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:508198863712:android:59de0a6405691d2e6f1405",
+        "android_client_info": {
+          "package_name": "com.example.a09_noob_coders_android"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "508198863712-g9k15frl3kv707pjo57vc1sr00fbgbuq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.a09_noob_coders_android",
+            "certificate_hash": "8fc58b7b36f25f1445af342a8558106517b54770"
+          }
+        },
+        {
+          "client_id": "508198863712-3p96q5kvp202mjlr7mo6bn61vratk6pg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAtDlWjkLvmve056uZTTKZCwSAMcpX8eNs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "508198863712-3p96q5kvp202mjlr7mo6bn61vratk6pg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

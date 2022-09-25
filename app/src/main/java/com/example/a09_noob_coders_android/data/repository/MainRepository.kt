@@ -15,7 +15,7 @@ import com.google.gson.Gson
 
 class MainRepository() {
 
-    suspend fun getAllEvents(context: Context, allEventsList: MutableLiveData<MutableState<SnapshotStateList<AllEventModel>>>): MutableLiveData<MutableState<SnapshotStateList<AllEventModel>>> {
+    suspend fun getAllEvents(context: Context, allEventsList: MutableLiveData<SnapshotStateList<AllEventModel>>): MutableLiveData<SnapshotStateList<AllEventModel>> {
         val gson = Gson()
         val url = "https://kontests.net/api/v1/all"
         val queue = Volley.newRequestQueue(context)
@@ -25,7 +25,7 @@ class MainRepository() {
                 Toast.makeText(context, "Fetched data successfully", Toast.LENGTH_LONG).show()
                 for (i in 0 until response.length()) {
 //                if (response.getJSONObject(i)["in_24_hours"] == "Yes") {
-                    allEventsList.value?.value?.add(
+                    allEventsList.value?.add(
                         gson.fromJson(
                             response.getJSONObject(i).toString(),
                             AllEventModel::class.java
@@ -44,45 +44,8 @@ class MainRepository() {
         )
         queue.add(jsonObjectRequest)
 
-        allEventsList.value?.value?.sortBy { it.start_time }
+        allEventsList.value?.sortBy { it.start_time }
         return allEventsList
-    }
-
-    suspend fun getEvents(
-        context: Context,
-        _EventsList: MutableLiveData<MutableState<SnapshotStateList<EventModel>>>,
-        end_point: String
-    ): MutableLiveData<MutableState<SnapshotStateList<EventModel>>> {
-        val gson = Gson()
-        val url = "https://kontests.net/api/v1/$end_point"
-        val queue = Volley.newRequestQueue(context)
-        val jsonObjectRequest = JsonArrayRequest(
-            Request.Method.GET, url, null,
-            { response ->
-                Toast.makeText(context, "Fetched data successfully", Toast.LENGTH_LONG).show()
-                for (i in 0 until response.length()) {
-//                    if (response.getJSONObject(i)["in_24_hours"] == "Yes") {
-                        _EventsList.value?.value?.add(
-                            gson.fromJson(
-                                response.getJSONObject(i).toString(),
-                                EventModel::class.java
-                            )
-                        )
-//                    }
-//                    Toast.makeText(
-//                        context,
-//                        response[i].toString(),
-//                        Toast.LENGTH_LONG
-//                    ).show()
-                }
-            }, {
-                Toast.makeText(context, "Unable to fetch data!!!", Toast.LENGTH_LONG).show()
-            }
-        )
-        queue.add(jsonObjectRequest)
-
-        _EventsList.value?.value?.sortBy { it.start_time }
-        return _EventsList
     }
 }
 
