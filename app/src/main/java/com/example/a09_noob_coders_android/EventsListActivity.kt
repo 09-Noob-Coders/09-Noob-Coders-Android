@@ -63,6 +63,7 @@ fun BottomBar(navController: NavHostController) {
     val screens = listOf(
         BottomBarScreen.Home,
         BottomBarScreen.AllContests,
+        BottomBarScreen.Resources,
         BottomBarScreen.News,
         BottomBarScreen.Jobs,
     )

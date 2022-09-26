@@ -4,6 +4,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Work
 import androidx.compose.material.icons.rounded.EmojiEvents
 import androidx.compose.material.icons.rounded.Feed
+import androidx.compose.material.icons.rounded.GridView
 import androidx.compose.material.icons.rounded.Home
 import androidx.compose.ui.graphics.vector.ImageVector
 
@@ -25,6 +26,12 @@ sealed class BottomBarScreen(
         "allcontests",
         "All Contests",
         Icons.Rounded.EmojiEvents
+    )
+
+    object Resources : BottomBarScreen(
+        "resources",
+        "Resource",
+        Icons.Rounded.GridView
     )
 
     object News : BottomBarScreen(
