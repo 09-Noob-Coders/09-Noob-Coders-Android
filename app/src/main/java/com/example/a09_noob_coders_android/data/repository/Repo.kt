@@ -17,8 +17,8 @@ import com.google.gson.Gson
 class Repo() {
     suspend fun getNews(
         context: Context,
-        _NewsList: MutableState<SnapshotStateList<Article>>?
-    ): MutableState<SnapshotStateList<Article>>? {
+        _NewsList: SnapshotStateList<Article>?
+    ): SnapshotStateList<Article>? {
         val gson = Gson()
         val url =
             "https://newsapi.org/v2/top-headlines?country=in&category=technology&apiKey=88d84abc92da4626a4b733c1e6762fa5"
@@ -30,7 +30,7 @@ class Repo() {
                 Toast.makeText(context, "Fetched data successfully", Toast.LENGTH_LONG).show()
                 val articlesLi = response.getJSONArray("articles")
                 for (i in 0 until articlesLi.length()) {
-                    _NewsList?.value?.add(
+                    _NewsList?.add(
                         gson.fromJson(
                             articlesLi.getJSONObject(i).toString(),
                             Article::class.java
