@@ -6,7 +6,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.a09_noob_coders_android.presentation.bottom_navigation.components.*
-import com.example.a09_noob_coders_android.presentation.resource_module.ResourceScreen
+import com.example.a09_noob_coders_android.presentation.bottom_navigation.components.ResourceScreen
 import com.example.docode.presentation.bottom_navigation.components.HomeScreen
 
 @Composable

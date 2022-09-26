@@ -1,4 +1,4 @@
-package com.example.a09_noob_coders_android.presentation.resource_module
+package com.example.a09_noob_coders_android.presentation.bottom_navigation.components
 
 import android.content.Context
 import androidx.compose.foundation.clickable
