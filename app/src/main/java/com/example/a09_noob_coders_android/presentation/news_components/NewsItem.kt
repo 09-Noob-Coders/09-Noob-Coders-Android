@@ -1,4 +1,4 @@
-package com.example.docode.test.news_module.news_components
+package com.example.a09_noob_coders_android.presentation.news_components
 
 import android.content.Context
 import androidx.compose.foundation.Image
@@ -25,18 +25,8 @@ fun NewsItem(
     Card(
         modifier = Modifier
             .fillMaxWidth(),
-//            .height(100.dp)
-//            .padding(10.dp),
         onClick = onClick,
         backgroundColor = BluePrimary
-//            .clickable {
-////                val redirect = Intent(Intent.ACTION_VIEW)
-////                redirect.data = Uri.parse(article.url)
-////                context.startActivity(redirect)
-//
-//
-//            }
-
     ) {
         Row(
             modifier = Modifier

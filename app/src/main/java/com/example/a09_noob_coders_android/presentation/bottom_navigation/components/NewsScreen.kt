@@ -28,12 +28,12 @@ import androidx.navigation.NavHostController
 import coil.compose.rememberImagePainter
 import com.example.a09_noob_coders_android.data.models.news_modals.Article
 import com.example.a09_noob_coders_android.data.repository.Repo
+import com.example.a09_noob_coders_android.presentation.news_components.NewsItem
 import com.example.a09_noob_coders_android.presentation.news_components.NewsVM
 import com.example.a09_noob_coders_android.ui.theme.BluePrimary
 import com.example.a09_noob_coders_android.ui.theme.BlueSecondary
 import com.example.a09_noob_coders_android.ui.theme.OrangeDark
 import com.example.a09_noob_coders_android.ui.theme.OrangeLite
-import com.example.docode.test.news_module.news_components.NewsItem
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
