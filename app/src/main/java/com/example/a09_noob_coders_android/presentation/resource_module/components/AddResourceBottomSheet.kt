@@ -278,38 +278,45 @@ fun AddResourceBottomSheet(
         val submitFailed = remember {
             mutableStateOf(false)
         }
-        Button(onClick = {
-            if (title.value != "" && type.value != "" && tags.value != "" && desc.value != "" && link.value != "" && author.value != "") {
-                db.collection("resources").add(
-                    ResourceModal(
-                        title = title.value,
-                        type = type.value,
-                        tags = tags.value,
-                        desc = desc.value,
-                        url = link.value,
-                        creator = author.value,
-                        upvotes = 0,
-                        downvotes = 0
-                    )
-                ).addOnSuccessListener {
-                    scope.launch {
-                        sheetState.collapse()
-                        refreshList.value = true
-                        Toast.makeText(
-                            context,
-                            "Resource added successfully 🙌",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                }.addOnFailureListener {
+        Button(
+            onClick = {
+                if (title.value != "" && type.value != "" && tags.value != "" && desc.value != "" && link.value != "" && author.value != "") {
+                    db.collection("resources").add(
+                        ResourceModal(
+                            title = title.value,
+                            type = type.value,
+                            tags = tags.value,
+                            desc = desc.value,
+                            url = link.value,
+                            creator = author.value,
+                            upvotes = 0,
+                            downvotes = 0,
+                            upvoters = mutableListOf(),
+                            downvoters = mutableListOf(),
+                        )
+                    ).addOnSuccessListener {
+                        scope.launch {
+                            sheetState.collapse()
+                            refreshList.value = true
+                            Toast.makeText(
+                                context,
+                                "Resource added successfully 🙌",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }.addOnFailureListener {
 //                    submitFailed.value = true
+                        Toast.makeText(context, "Unable to add resource 😞", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                } else {
+//                submitFailed.value = true
                     Toast.makeText(context, "Unable to add resource 😞", Toast.LENGTH_SHORT).show()
                 }
-            } else {
-//                submitFailed.value = true
-                Toast.makeText(context, "Unable to add resource 😞", Toast.LENGTH_SHORT).show()
-            }
-        }, colors = ButtonDefaults.buttonColors(backgroundColor = OrangeDark)) {
+            },
+            colors = ButtonDefaults.buttonColors(backgroundColor = OrangeDark),
+            modifier = Modifier.fillMaxWidth()
+        ) {
             Text(
                 text = "Submit",
                 fontSize = 15.sp,
@@ -317,23 +324,5 @@ fun AddResourceBottomSheet(
                 color = Color.White
             )
         }
-
-//        if (submitFailed.value) {
-//            Snackbar(
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .padding(start = 5.dp, end = 5.dp)
-//            ) {
-//                Text(text = "Unable to add resource 😞")
-//            }
-//        } else {
-//            Snackbar(
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .padding(start = 5.dp, end = 5.dp)
-//            ) {
-//                Text(text = "Resource added successfully 🙌")
-//            }
-//        }
     }
 }

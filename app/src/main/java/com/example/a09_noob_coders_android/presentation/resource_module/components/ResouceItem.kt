@@ -13,6 +13,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material.icons.rounded.KeyboardArrowUp
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -27,11 +28,13 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
+
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ResourceItem(
     context: Context,
-    resource: ResourceModal
+    resource: ResourceModal,
+    refreshList: MutableState<Boolean>
 ) {
 
     val db = Firebase.firestore
@@ -40,6 +43,7 @@ fun ResourceItem(
     val marked = remember {
         mutableStateOf(false)
     }
+
 
     Card(
         modifier = Modifier
@@ -73,37 +77,150 @@ fun ResourceItem(
             Row(modifier = Modifier.fillMaxWidth()) {
                 Text(text = "", modifier = Modifier.weight(1f))
                 Text(
-                    text = resource.upvotes.toString(),
+                    text = resource.upvoters.size.toString(),
                     color = Color.Green,
                     modifier = Modifier.padding(3.dp)
                 )
-                Icon(
-                    imageVector = Icons.Rounded.KeyboardArrowUp,
-                    contentDescription = "",
-                    tint = Color.Green,
-                    modifier = Modifier
-                        .padding(3.dp)
-                        .clickable {
 
-                        }
-                )
+                if (!resource.upvoters.contains(currentUser?.uid.toString())) {
+                    Icon(
+                        imageVector = Icons.Rounded.KeyboardArrowUp,
+                        contentDescription = "",
+                        tint = Color.Green,
+                        modifier = Modifier
+                            .padding(3.dp)
+                            .clickable {
+                                var docId = ""
+                                db
+                                    .collection("resources")
+                                    .get()
+                                    .addOnSuccessListener {
+                                        for (i in it.documents) {
+                                            if (i["title"] == resource.title) {
+                                                docId = i.id
+                                                val upList = i["upvoters"] as MutableList<String>
+                                                val downList =
+                                                    i["downvoters"] as MutableList<String>
+
+                                                if (!upList.contains(currentUser?.uid.toString()) && downList.contains(
+                                                        currentUser?.uid.toString()
+                                                    )
+                                                ) {
+                                                    upList.add(currentUser?.uid.toString())
+                                                    downList.remove(currentUser?.uid.toString())
+                                                    db
+                                                        .collection("resources")
+                                                        .document(docId)
+                                                        .update(
+                                                            mapOf(
+                                                                "upvoters" to upList,
+                                                                "downvoters" to downList
+                                                            )
+                                                        )
+                                                } else if (!upList.contains(currentUser?.uid.toString()) && !downList.contains(
+                                                        currentUser?.uid.toString()
+                                                    )
+                                                ) {
+                                                    upList.add(currentUser?.uid.toString())
+                                                    db
+                                                        .collection("resources")
+                                                        .document(docId)
+                                                        .update(
+                                                            mapOf(
+                                                                "upvoters" to upList,
+                                                                "downvoters" to downList
+                                                            )
+                                                        )
+                                                }
+                                            }
+                                        }
+                                    }
+                                refreshList.value = true
+                            }
+                    )
+                } else {
+                    Icon(
+                        imageVector = Icons.Rounded.KeyboardArrowUp,
+                        contentDescription = "",
+                        tint = Color.Gray,
+                        modifier = Modifier
+                            .padding(3.dp)
+                    )
+                }
+
                 Text(
-                    text = resource.downvotes.toString(),
+                    text = resource.downvoters.size.toString(),
                     color = Color.Red,
                     modifier = Modifier.padding(3.dp)
                 )
-                Icon(
-                    imageVector = Icons.Rounded.KeyboardArrowDown,
-                    contentDescription = "",
-                    tint = Color.Red,
-                    modifier = Modifier
-                        .padding(3.dp)
-                        .clickable {
 
-                        }
-                )
+
+                if (!resource.downvoters.contains(currentUser?.uid.toString())) {
+                    Icon(
+                        imageVector = Icons.Rounded.KeyboardArrowDown,
+                        contentDescription = "",
+                        tint = Color.Red,
+                        modifier = Modifier
+                            .padding(3.dp)
+                            .clickable {
+                                var docId = ""
+                                db
+                                    .collection("resources")
+                                    .get()
+                                    .addOnSuccessListener {
+                                        for (i in it.documents) {
+                                            if (i["title"] == resource.title) {
+                                                docId = i.id
+                                                val upList = i["upvoters"] as MutableList<String>
+                                                val downList =
+                                                    i["downvoters"] as MutableList<String>
+
+                                                if (!downList.contains(currentUser?.uid.toString()) && upList.contains(
+                                                        currentUser?.uid.toString()
+                                                    )
+                                                ) {
+                                                    upList.remove(currentUser?.uid.toString())
+                                                    downList.add(currentUser?.uid.toString())
+                                                    db
+                                                        .collection("resources")
+                                                        .document(docId)
+                                                        .update(
+                                                            mapOf(
+                                                                "upvoters" to upList,
+                                                                "downvoters" to downList
+                                                            )
+                                                        )
+                                                } else if (!downList.contains(currentUser?.uid.toString()) && !upList.contains(
+                                                        currentUser?.uid.toString()
+                                                    )
+                                                ) {
+                                                    downList.add(currentUser?.uid.toString())
+                                                    db
+                                                        .collection("resources")
+                                                        .document(docId)
+                                                        .update(
+                                                            mapOf(
+                                                                "upvoters" to upList,
+                                                                "downvoters" to downList
+                                                            )
+                                                        )
+                                                }
+                                            }
+                                        }
+                                    }
+                                refreshList.value = true
+                            }
+                    )
+                } else {
+                    Icon(
+                        imageVector = Icons.Rounded.KeyboardArrowDown,
+                        contentDescription = "",
+                        tint = Color.Gray,
+                        modifier = Modifier
+                            .padding(3.dp)
+                    )
+                }
             }
         }
     }
-
 }

@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
@@ -17,10 +18,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.a09_noob_coders_android.presentation.resource_module.ResourceItemClass
 import com.example.a09_noob_coders_android.presentation.resource_module.modals.ResourceModal
 import com.example.a09_noob_coders_android.ui.theme.BluePrimary
 import com.example.a09_noob_coders_android.presentation.resource_module.components.AddResourceBottomSheet
 import com.example.a09_noob_coders_android.presentation.resource_module.components.ResourceItem
+import com.example.a09_noob_coders_android.ui.theme.BlueSecondary
+import com.example.a09_noob_coders_android.ui.theme.OrangeLite
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.firestore
@@ -94,28 +98,68 @@ fun ResourceScreen(
             mutableStateOf<QuerySnapshot?>(null)
         }
 
-        if (refreshList.value) {
+        if (refreshList.value || ResourceItemClass.upvoted.value || ResourceItemClass.downvoted.value) {
             db.collection("resources").get().addOnSuccessListener { resources ->
                 li.value = resources
             }
             refreshList.value = false
+            ResourceItemClass.upvoted.value = false
+            ResourceItemClass.downvoted.value = false
         }
+
+        val myquery = remember {
+            mutableStateOf("")
+        }
+        TextField(
+            value = myquery.value,
+            onValueChange = {
+                myquery.value = it
+            },
+            shape = RoundedCornerShape(40.dp),
+            colors = TextFieldDefaults.textFieldColors(
+                backgroundColor = BlueSecondary,
+                textColor = OrangeLite,
+                placeholderColor = Color.Gray,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+                disabledIndicatorColor = Color.Transparent
+            ),
+            placeholder = {
+                Text(text = "kotlin, swift, python....")
+            },
+            singleLine = true,
+            modifier = Modifier
+                .padding(start = 5.dp, end = 5.dp)
+                .fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(5.dp))
+
 
         LazyColumn() {
             if (li.value != null) {
-                items(li.value?.documents!!.size) { index ->
+                val newLi = li.value!!.documents.sortedByDescending { it["upvotes"] as Long }
+                    .filter {
+                        "${it["tags"].toString().lowercase()},${
+                            it["title"].toString().lowercase()
+                        }".contains(myquery.value.lowercase())
+                    }
+                items(newLi.size) { index ->
                     ResourceItem(
                         context,
                         ResourceModal(
-                            title = li.value?.documents!![index]["title"] as String,
-                            type = li.value?.documents!![index]["type"] as String,
-                            tags = li.value?.documents!![index]["tags"] as String,
-                            desc = li.value?.documents!![index]["desc"] as String,
-                            url = li.value?.documents!![index]["url"] as String,
-                            creator = li.value?.documents!![index]["creator"] as String,
-                            upvotes = li.value?.documents!![index]["upvotes"] as Long,
-                            downvotes = li.value?.documents!![index]["downvotes"] as Long
-                        )
+                            title = newLi[index]["title"] as String,
+                            type = newLi[index]["type"] as String,
+                            tags = newLi[index]["tags"] as String,
+                            desc = newLi[index]["desc"] as String,
+                            url = newLi[index]["url"] as String,
+                            creator = newLi[index]["creator"] as String,
+                            upvotes = newLi[index]["upvotes"] as Long,
+                            downvotes = newLi[index]["downvotes"] as Long,
+                            upvoters = newLi[index]["upvoters"] as MutableList<String>,
+                            downvoters = newLi[index]["downvoters"] as MutableList<String>
+                        ),
+                        refreshList
                     )
                     Divider()
                 }

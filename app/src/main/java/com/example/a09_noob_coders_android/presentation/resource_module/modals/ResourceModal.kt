@@ -8,5 +8,7 @@ data class ResourceModal(
     val url: String,
     val creator: String,
     val upvotes: Long,
-    val downvotes: Long
+    val downvotes: Long,
+    val upvoters: MutableList<String>,
+    val downvoters: MutableList<String>
 )
